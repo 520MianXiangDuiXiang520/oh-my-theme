@@ -92,8 +92,8 @@ export class Prompt {
     }
 
     to_string(): string {
-        let res = ""
+        let res = "PROMPT=\""
         this.parts.forEach(function (v: Part) { res += v.to_string() })
-        return res
+        return res+"\""
     }
 }

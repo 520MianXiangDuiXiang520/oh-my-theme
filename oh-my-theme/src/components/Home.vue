@@ -4,7 +4,7 @@
       <el-card shadow="hover" :style="part.get_style(true)" @click="on_open_detail(idx)"> {{ part.show(true) }} </el-card>
     </el-col>
     <el-col :span="4">
-      <el-card shadow="hover" style="background-color: green;" @click="on_new_part()"> 新建 </el-card>
+      <el-card shadow="hover" style="background-color: green;" @click="on_new_part()"> New </el-card>
     </el-col>
   </el-row>
 
@@ -32,15 +32,15 @@
       </el-form-item>
 
       <el-form-item label="success-value" :label-width="formLabelWidth">
-        <el-input v-model="form.success_value" autocomplete="off" :disabled="form.success_type != 'Const'"/>
+        <el-input v-model="form.success_value" autocomplete="off" :disabled="form.success_type != 'Const'" />
+      </el-form-item>
+
+      <el-form-item label="success-color" :label-width="formLabelWidth">
+        <el-color-picker v-model="form.success_color" />
       </el-form-item>
 
       <el-form-item label="success-reset" :label-width="formLabelWidth">
         <el-switch v-model="form.success_reset" />
-      </el-form-item>
-
-      <el-form-item label="success-value" :label-width="formLabelWidth">
-        <el-input v-model="form.success_value" autocomplete="off" />
       </el-form-item>
 
       <!-- fail -->
@@ -51,7 +51,7 @@
       </el-form-item>
 
       <el-form-item label="fail-value" :label-width="formLabelWidth">
-        <el-input v-model="form.fail_value" autocomplete="off" :disabled="form.fail_type != 'Const'"/>
+        <el-input v-model="form.fail_value" autocomplete="off" :disabled="form.fail_type != 'Const'" />
       </el-form-item>
 
       <el-form-item label="fail-color" :label-width="formLabelWidth">
@@ -73,10 +73,11 @@
     </template>
   </el-dialog>
 
-  <div>
-    <h1 class="code">PROMPT="{{ _p.to_string() }}</h1>
+  <div class="editor">
+    <div class="code" @click="copy()">
+      <p>{{ _p.to_string() }}</p>
+    </div>
   </div>
- 
 </template>
   
 <script lang="ts" setup>
@@ -178,6 +179,26 @@ function on_new_part() {
   dialogFormVisible.value = true
 }
 
+function copy() {
+  const textarea = document.createElement("textarea")
+  textarea.value = _p.value.to_string()
+  document.body.appendChild(textarea)
+  textarea.select()
+  document.execCommand("copy")
+  document.body.removeChild(textarea)
+  success_msg("copy success!")
+}
+
+
+
+const success_msg = (msg:string) => {
+  ElNotification({
+    title: 'Success',
+    message: msg,
+    type: 'success',
+  })
+}
+
 _p.value.push(new_part("Const", "["))
 _p.value.push(new_part("DATE1"))
 _p.value.push(new_part("Const", "] "))
@@ -187,9 +208,21 @@ console.log(_p);
 </script>
 
 <style scoped>
+.editor {
+  background-color: #1b1b1b;
+  margin-top: 3%;
+  margin-left: 3%;
+  width: 94%;
+}
+
 .code {
-  background-color: rgb(25, 25, 25);
-  margin-top: 20px;
+  height: 60px;
+  width: 98%;
+  margin-left: 1%;
+  display: flex;
+  align-items: center;
+  color: #eeeeee;
+  font-size: larger;
 }
 </style>
   
